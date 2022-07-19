@@ -32,7 +32,8 @@ def main():
         "quit": None,
         "empty database": generate_empty_db,
         "new team": new_team,
-        "print teams": print_teams
+        "print teams": print_teams,
+        "delete team": delete_team
     }
 
     # We always want to connect to the database, otherwise this
@@ -170,3 +171,10 @@ def new_team(team_name=None):
         logging.info(f"New team {team_name} was created")
     else:
         print("This team already exists")
+
+def delete_team(team_name=None):
+    """Deletes a team from the database"""
+    if team_name==None:
+        team_name = choose_team("Which team should be deleted?")
+    logging.info(f"Deleting {team_name}")
+    cur.execute("DELETE FROM teams WHERE name=(?)", (team_name,))
