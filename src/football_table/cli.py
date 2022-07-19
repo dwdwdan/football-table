@@ -83,7 +83,14 @@ def generate_empty_db():
 def new_team():
     """Add a new team into the database"""
     team_name = input("Enter team name\n")
-    cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
+
+    # first I want to check whether a team of that name already
+    # exists. If it does, don't add the team and tell the user.
+    cur.execute(f"SELECT * FROM teams WHERE name=\"{team_name}\";")
+    if cur.fetchone() is None:
+        cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
+    else:
+        print("This team already exists")
 
 def print_teams():
     """Print a list of teams in the database"""
