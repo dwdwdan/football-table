@@ -106,9 +106,10 @@ def generate_empty_db():
             logging.error(f"Recreating content has failed with error message {e}")
             cur.execute("ROLLBACK;")
 
-def new_team():
+def new_team(team_name=None):
     """Add a new team into the database"""
-    team_name = input("Enter team name\n")
+    if team_name==None:
+        team_name = input("Enter team name\n")
 
     # first I want to check whether a team of that name already
     # exists. If it does, don't add the team and tell the user.
