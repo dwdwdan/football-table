@@ -4,7 +4,7 @@ from pathlib import Path
 db_file = Path("database_test.db")
 
 def str2bool(string):
-    """Converts the given string into a bool"""
+    """Converts the given string into a bool. Assumes false unless the answer is affirmative"""
     confirm_choices = ["y", "yes"]
     if string.lower() in confirm_choices:
         return True
@@ -13,8 +13,12 @@ def str2bool(string):
 
     
 def main():
+    # We always want to connect to the database, otherwise this
+    # software does nothing useful.
     connect_to_db()
 
+    # print("Type \"help\" for help information")
+    # main CLI loop
     running = True
     while running:
         command = input("Enter a command\n")
@@ -29,6 +33,7 @@ def main():
     conn.close()
 
 def connect_to_db():
+    """Connect to the database stored in db_file. If the file does not exist, create it, and populate it with an empty database."""
     create_tables = False
     if not db_file.is_file():
         create_tables=True
@@ -36,6 +41,8 @@ def connect_to_db():
     # other functions.
     global conn
     global cur
+    # isolation_level=None disables implicit transactions, meaning I
+    # have to handle them myself. For me, this is easier to program.
     conn = sqlite3.connect(db_file, isolation_level=None)
     cur = conn.cursor()
     print("Connected to database")
@@ -45,12 +52,18 @@ def connect_to_db():
 
 def generate_empty_db():
     """Creates required tables. WARNING: THIS WILL DELETE ALL DATA"""
+    # We want to check with the user that this is what they want us to
+    # do, as it is a destructive action, that can be run automatically
+    # on startup
     confirmation = input(f"Do you want to generate a new empty database?\n THIS WILL DELETE ALL DATA (enter Y to confirm)")
     if str2bool(confirmation) is True:
         try:
             cur.execute("BEGIN TRANSACTION;")
+            # first drop the games and teams tables so they can be recreated
             cur.execute("DROP TABLE IF EXISTS games;")
             cur.execute("DROP TABLE IF EXISTS teams;")
+
+            # recreate the games and teams tables
             cur.execute("""CREATE TABLE games (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "home_team"	INTEGER NOT NULL,
@@ -68,10 +81,12 @@ def generate_empty_db():
             cur.execute("ROLLBACK;")
 
 def new_team():
+    """Add a new team into the database"""
     team_name = input("Enter team name\n")
     cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
 
 def print_teams():
+    """Print a list of teams in the database"""
     cur.execute("SELECT name FROM teams")
     for team in cur.fetchall():
         print(team[0])
