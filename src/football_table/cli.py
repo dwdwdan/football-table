@@ -1,5 +1,8 @@
 import sqlite3
 from pathlib import Path
+import logging
+
+logging.basicConfig(filename="log.log", encoding="utf-8", level=logging.DEBUG)
 
 db_file = Path("database_test.db")
 
@@ -24,6 +27,7 @@ def main():
         command = input("-> ")
         match command:
             case "quit":
+                logging.info("Quiting application")
                 running = False
             case "empty database":
                 generate_empty_db()
@@ -49,7 +53,7 @@ def connect_to_db():
     # have to handle them myself. For me, this is easier to program.
     conn = sqlite3.connect(db_file, isolation_level=None)
     cur = conn.cursor()
-    print("Connected to database")
+    logging.info(f"Connected to database stored at {db_file}")
 
     if create_tables:
         generate_empty_db()
@@ -61,6 +65,7 @@ def generate_empty_db():
     # on startup
     confirmation = input(f"Do you want to generate a new empty database?\n THIS WILL DELETE ALL DATA (enter Y to confirm)")
     if str2bool(confirmation) is True:
+        logging.info(f"Recreating database content")
         try:
             cur.execute("BEGIN TRANSACTION;")
             # first drop the games and teams tables so they can be recreated
@@ -81,7 +86,7 @@ def generate_empty_db():
                 PRIMARY KEY("id" AUTOINCREMENT))""")
             cur.execute("COMMIT;")
         except Exception as e:
-            print("ERROR: ", e)
+            logging.error(f"Recreating content has failed with error message {e}")
             cur.execute("ROLLBACK;")
 
 def new_team():
@@ -93,6 +98,7 @@ def new_team():
     cur.execute(f"SELECT * FROM teams WHERE name=\"{team_name}\";")
     if cur.fetchone() is None:
         cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
+        logging.info(f"New team {team_name} was created")
     else:
         print("This team already exists")
 
