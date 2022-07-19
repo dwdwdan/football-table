@@ -109,19 +109,6 @@ def generate_empty_db(ask_for_confirmation=True):
         print(e)
         cur.execute("ROLLBACK;")
 
-def new_team(team_name=None):
-    """Add a new team into the database"""
-    if team_name==None:
-        team_name = input("Enter team name\n")
-
-    # first I want to check whether a team of that name already
-    # exists. If it does, don't add the team and tell the user.
-    cur.execute(f"SELECT * FROM teams WHERE name=\"{team_name}\";")
-    if cur.fetchone() is None:
-        cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
-        logging.info(f"New team {team_name} was created")
-    else:
-        print("This team already exists")
 
 def get_teams():
     cur.execute("SELECT name FROM teams")
@@ -148,3 +135,17 @@ def print_teams():
     print("-------")
     for team in get_teams():
         print(team)
+
+def new_team(team_name=None):
+    """Add a new team into the database"""
+    if team_name==None:
+        team_name = input("Enter team name\n")
+
+    # first I want to check whether a team of that name already
+    # exists. If it does, don't add the team and tell the user.
+    cur.execute(f"SELECT * FROM teams WHERE name=\"{team_name}\";")
+    if cur.fetchone() is None:
+        cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
+        logging.info(f"New team {team_name} was created")
+    else:
+        print("This team already exists")
