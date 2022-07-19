@@ -31,6 +31,8 @@ def main():
                 new_team()
             case "print teams":
                 print_teams()
+            case default:
+                print("That is not a valid command. Type \"quit\" to exit the application.")
 
     conn.close()
 
