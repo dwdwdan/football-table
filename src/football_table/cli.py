@@ -5,7 +5,7 @@ import readline
 
 logging.basicConfig(filename="log.log", encoding="utf-8", level=logging.DEBUG)
 
-db_file = Path("database_test.db")
+
 
 def str2bool(string):
     """Converts the given string into a bool. Assumes false unless the answer is affirmative"""
@@ -37,7 +37,8 @@ def main():
 
     # We always want to connect to the database, otherwise this
     # software does nothing useful.
-    connect_to_db()
+    db_file = Path("database.db")
+    connect_to_db(db_file)
 
     # print("Type \"help\" for help information")
     # main CLI loop
@@ -56,7 +57,7 @@ def main():
 
     conn.close()
 
-def connect_to_db():
+def connect_to_db(db_file):
     """Connect to the database stored in db_file. If the file does not exist, create it, and populate it with an empty database."""
     create_tables = False
     if not db_file.is_file():
