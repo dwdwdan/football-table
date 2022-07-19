@@ -21,7 +21,7 @@ def main():
     # main CLI loop
     running = True
     while running:
-        command = input("Enter a command\n")
+        command = input("-> ")
         match command:
             case "quit":
                 running = False
