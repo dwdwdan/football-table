@@ -6,7 +6,7 @@ tmp/
 *.py[cod]
 *.egg
 *.egg-info
-src/grade_tracker.egg-info
+env
 build
 htmlcov
 *.zsh
