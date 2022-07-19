@@ -31,3 +31,11 @@ def test_get_team_id_invalid_name():
     with pytest.raises(Exception):
         ft.get_team_id("A non-existing team")
 
+def test_new_team():
+    create_test_db()
+    test_team_name = "Team E"
+    ft.new_team(test_team_name)
+
+    # If this runs successfully, we know that it has been created
+    # properly.
+    ft.get_team_id(test_team_name)
