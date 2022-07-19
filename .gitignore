@@ -1,0 +1,15 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+*.py[cod]
+*.egg
+*.egg-info
+src/grade_tracker.egg-info
+build
+htmlcov
+*.zsh
+
+*~
+dist
