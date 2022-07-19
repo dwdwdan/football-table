@@ -73,7 +73,7 @@ def generate_empty_db():
                 PRIMARY KEY("id" AUTOINCREMENT))""")
             cur.execute("""CREATE TABLE teams (
                 "id"	INTEGER NOT NULL UNIQUE,
-                "name"      TEXT,
+                "name"      TEXT NOT NULL UNIQUE,
                 PRIMARY KEY("id" AUTOINCREMENT))""")
             cur.execute("COMMIT;")
         except Exception as e:
