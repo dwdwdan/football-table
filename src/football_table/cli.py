@@ -54,3 +54,7 @@ def generate_empty_db():
         except Exception as e:
             print("ERROR: ", e)
             cur.execute("ROLLBACK;")
+
+def new_team():
+    team_name = input("Enter team name\n")
+    cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
