@@ -25,6 +25,8 @@ def main():
         match command:
             case "quit":
                 running = False
+            case "empty database":
+                generate_empty_db()
             case "new team":
                 new_team()
             case "print teams":
