@@ -2,6 +2,16 @@ import sqlite3
 from pathlib import Path
 
 db_file = Path("database_test.db")
+
+def str2bool(string):
+    """Converts the given string into a bool"""
+    confirm_choices = ["y", "yes"]
+    if string.lower() in confirm_choices:
+        return True
+    else:
+        return False
+
+    
 def main():
     connect_to_db()
     conn.close()
