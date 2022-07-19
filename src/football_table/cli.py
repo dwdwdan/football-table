@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 import logging
+import readline
 
 logging.basicConfig(filename="log.log", encoding="utf-8", level=logging.DEBUG)
 
@@ -14,8 +15,26 @@ def str2bool(string):
     else:
         return False
 
+# This function is stolen from https://eli.thegreenplace.net/2016/basics-of-using-the-readline-library/
+def make_completer(vocabulary):
+    def custom_complete(text, state):
+        # None is returned for the end of the completion session.
+        results = [x for x in vocabulary if x.startswith(text)] + [None]
+        # A space is added to the completion since the Python readline doesn't
+        # do this on its own. When a word is fully completed we want to mimic
+        # the default readline library behavior of adding a space after it.
+        return results[state] + " "
+    return custom_complete
+
     
 def main():
+    available_commands = {
+        "quit": None,
+        "empty database": generate_empty_db,
+        "new team": new_team,
+        "print teams": print_teams
+    }
+
     # We always want to connect to the database, otherwise this
     # software does nothing useful.
     connect_to_db()
@@ -24,19 +43,16 @@ def main():
     # main CLI loop
     running = True
     while running:
-        command = input("-> ")
-        match command:
-            case "quit":
-                logging.info("Quiting application")
-                running = False
-            case "empty database":
-                generate_empty_db()
-            case "new team":
-                new_team()
-            case "print teams":
-                print_teams()
-            case default:
-                print("That is not a valid command. Type \"quit\" to exit the application.")
+        readline.parse_and_bind('tab: complete')
+        readline.set_completer(make_completer(available_commands))
+        wanted_command = input("-> ").strip()
+        if wanted_command == "quit":
+            logging.info("Quiting application")
+            running = False
+        elif wanted_command in available_commands:
+            available_commands[wanted_command]()
+        else:
+            print("That is not a valid command. Type \"quit\" to exit the application.")
 
     conn.close()
 
