@@ -39,3 +39,13 @@ def test_new_team():
     # If this runs successfully, we know that it has been created
     # properly.
     ft.get_team_id(test_team_name)
+
+def test_delete_team():
+    create_test_db()
+    team_to_delete = "Team A"
+    ft.delete_team(team_to_delete)
+
+    # If this function raises an exception, we know that the team no
+    # longer exists in the db
+    with pytest.raises(Exception):
+        ft.get_team_id(team_to_delete)
