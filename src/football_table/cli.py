@@ -14,6 +14,18 @@ def str2bool(string):
     
 def main():
     connect_to_db()
+
+    running = True
+    while running:
+        command = input("Enter a command\n")
+        match command:
+            case "quit":
+                running = False
+            case "new team":
+                new_team()
+            case "print teams":
+                print_teams()
+
     conn.close()
 
 def connect_to_db():
