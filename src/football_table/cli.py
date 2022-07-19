@@ -118,6 +118,7 @@ def get_teams():
     return teams
 
 def get_team_id(team_name):
+    logging.info(f"Getting id of {team_name}")
     cur.execute(f"SELECT id FROM teams WHERE name=\"{team_name}\"")
     id = cur.fetchone()
     # I need to check that a team with the given name actually exists.
