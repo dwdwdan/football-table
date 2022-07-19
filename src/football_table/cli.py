@@ -75,36 +75,39 @@ def connect_to_db(db_file):
     if create_tables:
         generate_empty_db()
 
-def generate_empty_db():
+def generate_empty_db(ask_for_confirmation=True):
     """Creates required tables. WARNING: THIS WILL DELETE ALL DATA"""
     # We want to check with the user that this is what they want us to
     # do, as it is a destructive action, that can be run automatically
     # on startup
-    confirmation = input(f"Do you want to generate a new empty database?\n THIS WILL DELETE ALL DATA (enter Y to confirm)")
-    if str2bool(confirmation) is True:
-        logging.info(f"Recreating database content")
-        try:
-            cur.execute("BEGIN TRANSACTION;")
-            # first drop the games and teams tables so they can be recreated
-            cur.execute("DROP TABLE IF EXISTS games;")
-            cur.execute("DROP TABLE IF EXISTS teams;")
+    if ask_for_confirmation is True:
+        confirmation = input(f"Do you want to generate a new empty database?\n THIS WILL DELETE ALL DATA (enter Y to confirm)")
+        if str2bool(confirmation) is False:
+                    return
+    logging.info(f"Recreating database content")
+    try:
+        cur.execute("BEGIN TRANSACTION;")
+        # first drop the games and teams tables so they can be recreated
+        cur.execute("DROP TABLE IF EXISTS games;")
+        cur.execute("DROP TABLE IF EXISTS teams;")
 
-            # recreate the games and teams tables
-            cur.execute("""CREATE TABLE games (
-                "id"	INTEGER NOT NULL UNIQUE,
-                "home_team"	INTEGER NOT NULL,
-                "away_team"	INTEGER NOT NULL,
-                "home_score"	INTEGER,
-                "away_score"	INTEGER,
-                PRIMARY KEY("id" AUTOINCREMENT))""")
-            cur.execute("""CREATE TABLE teams (
-                "id"	INTEGER NOT NULL UNIQUE,
-                "name"      TEXT NOT NULL UNIQUE,
-                PRIMARY KEY("id" AUTOINCREMENT))""")
-            cur.execute("COMMIT;")
-        except Exception as e:
-            logging.error(f"Recreating content has failed with error message {e}")
-            cur.execute("ROLLBACK;")
+        # recreate the games and teams tables
+        cur.execute("""CREATE TABLE games (
+            "id"	INTEGER NOT NULL UNIQUE,
+            "home_team"	INTEGER NOT NULL,
+            "away_team"	INTEGER NOT NULL,
+            "home_score"	INTEGER,
+            "away_score"	INTEGER,
+            PRIMARY KEY("id" AUTOINCREMENT))""")
+        cur.execute("""CREATE TABLE teams (
+            "id"	INTEGER NOT NULL UNIQUE,
+            "name"      TEXT NOT NULL UNIQUE,
+            PRIMARY KEY("id" AUTOINCREMENT))""")
+        cur.execute("COMMIT;")
+    except Exception as e:
+        logging.error(f"Recreating content has failed with error message {e}")
+        print(e)
+        cur.execute("ROLLBACK;")
 
 def new_team(team_name=None):
     """Add a new team into the database"""
