@@ -45,16 +45,20 @@ def main():
     # main CLI loop
     running = True
     while running:
-        readline.parse_and_bind('tab: complete')
-        readline.set_completer(make_completer(available_commands))
-        wanted_command = input("-> ").strip()
-        if wanted_command == "quit":
-            logging.info("Quiting application")
+        try:
+            readline.parse_and_bind('tab: complete')
+            readline.set_completer(make_completer(available_commands))
+            wanted_command = input("-> ").strip()
+            if wanted_command == "quit":
+                logging.info("Quiting application")
+                running = False
+            elif wanted_command in available_commands:
+                available_commands[wanted_command]()
+            else:
+                print("That is not a valid command. Type \"quit\" to exit the application.")
+        except (KeyboardInterrupt, EOFError):
+            print()
             running = False
-        elif wanted_command in available_commands:
-            available_commands[wanted_command]()
-        else:
-            print("That is not a valid command. Type \"quit\" to exit the application.")
 
     conn.close()
 
