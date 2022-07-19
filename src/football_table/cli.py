@@ -137,6 +137,26 @@ def print_teams():
     for team in get_teams():
         print(team)
 
+def choose_team(prompt):
+    """Ask the user to choose a team"""
+    teams = get_teams()
+    readline.parse_and_bind('tab: complete')
+    readline.set_completer(make_completer(teams))
+    chosen_team = input(prompt).strip()
+    try:
+        get_team_id(chosen_team)
+    # TODO: change this exception to a specific type. At the moment,
+    # any random exception with be caught when it might not be the
+    # right type.
+    except Exception as e:
+        print("That is not a valid team, try again")
+        # Ask the user again
+        choose_team(prompt)
+    logging.info(f"User selecting {chosen_team}")
+    return(chosen_team)
+
+
+
 def new_team(team_name=None):
     """Add a new team into the database"""
     if team_name==None:
