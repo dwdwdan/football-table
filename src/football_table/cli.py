@@ -58,3 +58,8 @@ def generate_empty_db():
 def new_team():
     team_name = input("Enter team name\n")
     cur.execute("INSERT INTO teams(name) VALUES (?)", (team_name,))
+
+def print_teams():
+    cur.execute("SELECT name FROM teams")
+    for team in cur.fetchall():
+        print(team[0])
