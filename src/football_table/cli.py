@@ -125,8 +125,7 @@ def get_team_id(team_name):
     # I need to check that a team with the given name actually exists.
     if id is None:
         print("There is no team with that ID")
-        # TODO: give this exceotion a specific type
-        raise Exception
+        raise ValueError(f"{team_name} is not a known team")
     else:
         # id is a tuple of length one, but I want to return the number
         return id[0]
@@ -146,10 +145,9 @@ def choose_team(prompt):
     chosen_team = input(prompt).strip()
     try:
         get_team_id(chosen_team)
-    # TODO: change this exception to a specific type. At the moment,
-    # any random exception with be caught when it might not be the
-    # right type.
-    except Exception as e:
+    # This exception will be raised if chosen_team is not a valid team
+    # name
+    except ValueError as e:
         print("That is not a valid team, try again")
         # Ask the user again
         choose_team(prompt)
