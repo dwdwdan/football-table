@@ -119,8 +119,28 @@ def new_team():
     else:
         print("This team already exists")
 
+def get_teams():
+    cur.execute("SELECT name FROM teams")
+    teams = []
+    for team in cur.fetchall():
+        teams.append(team[0])
+    return teams
+
+def get_team_id(team_name):
+    cur.execute(f"SELECT id FROM teams WHERE name=\"{team_name}\"")
+    id = cur.fetchone()
+    # I need to check that a team with the given name actually exists.
+    if id is None:
+        print("There is no team with that ID")
+        # TODO: give this exceotion a specific type
+        raise Exception
+    else:
+        # id is a tuple of length one, but I want to return the number
+        return id[0]
+
 def print_teams():
     """Print a list of teams in the database"""
-    cur.execute("SELECT name FROM teams")
-    for team in cur.fetchall():
-        print(team[0])
+    print("Teams")
+    print("-------")
+    for team in get_teams():
+        print(team)
