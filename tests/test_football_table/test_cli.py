@@ -15,6 +15,16 @@ def create_test_db():
     for team in example_teams:
         ft.new_team(team)
 
+def delete_test_db():
+    if test_db_file.is_file():
+        test_db_file.unlink()
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup(request):
+    """Cleanup a testing directory once we are finished."""
+    request.addfinalizer(delete_test_db)
+
+
 def load_test_db():
     ft.connect_to_db(test_db_file, interactive=False)
 
