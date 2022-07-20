@@ -28,6 +28,14 @@ def cleanup(request):
 def load_test_db():
     ft.connect_to_db(test_db_file, interactive=False)
 
+
+def test_generate_db():
+    # First make sure the file doesn't exist
+    delete_test_db()
+
+    # loading the db should cause it to be recreated
+    load_test_db()
+
 def test_get_teams():
     create_test_db()
     assert(ft.get_teams() == ["Team A", "Team B", "Team C", "Team D"])
