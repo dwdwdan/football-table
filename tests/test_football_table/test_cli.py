@@ -49,3 +49,15 @@ def test_delete_team():
     # longer exists in the db
     with pytest.raises(Exception):
         ft.get_team_id(team_to_delete)
+
+def test_rename_team():
+    create_test_db()
+    team_to_rename = "Team D"
+    rename_to = "Team D test"
+
+    ft.rename_team(team_to_rename, rename_to)
+
+    with pytest.raises(Exception):
+        ft.get_team_id(team_to_rename)
+
+    ft.get_team_id(rename_to)
