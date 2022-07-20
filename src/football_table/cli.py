@@ -33,7 +33,8 @@ def main():
         "empty database": generate_empty_db,
         "new team": new_team,
         "print teams": print_teams,
-        "delete team": delete_team
+        "delete team": delete_team,
+        "rename team": rename_team
     }
 
     # We always want to connect to the database, otherwise this
@@ -180,3 +181,24 @@ def delete_team(team_name=None):
         team_name = choose_team("Which team should be deleted?")
     logging.info(f"Deleting {team_name}")
     cur.execute("DELETE FROM teams WHERE name=(?)", (team_name,))
+
+def rename_team(team_to_rename=None, rename_to=None):
+    """Renames a team"""
+    if team_to_rename==None:
+        team_to_rename = choose_team("Which team should be renamed?")
+    if rename_to == None:
+        rename_to = input("What should it be renamed to")
+
+    try:
+        id_to_rename = get_team_id(team_to_rename)
+    # If get_team_id throws a value error, there isn't a team of that name
+    except ValueError:
+        rename_team()
+        # at this point the rename will have already been done, so
+        # just return
+        return
+
+    logging.info(f"Renaming {team_to_rename} to {rename_to}. This has id {id_to_rename}")
+    cur.execute(f"UPDATE teams SET name=\"{rename_to}\" WHERE id={id_to_rename};")
+
+
