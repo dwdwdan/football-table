@@ -2,12 +2,13 @@ from football_table import cli as ft
 import pytest
 from pathlib import Path
 
+test_db_file = Path("database_test.db")
+
 @pytest.mark.parametrize('string, expected', [("y", True), ("Y", True), ("yes", True), ("Yes", True), ("n", False), ("43", False)])
 def test_str2bool(string, expected):
     assert(ft.str2bool(string) == expected)
 
 def create_test_db():
-    test_db_file = Path("database_test.db")
     ft.connect_to_db(test_db_file, interactive=False)
     ft.generate_empty_db(interactive=False)
     example_teams = ["Team A", "Team B", "Team C", "Team D"]
@@ -15,7 +16,6 @@ def create_test_db():
         ft.new_team(team)
 
 def load_test_db():
-    test_db_file = Path("../database_test.db")
     ft.connect_to_db(test_db_file, interactive=False)
 
 def test_get_teams():
