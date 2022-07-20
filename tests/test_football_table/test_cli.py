@@ -8,15 +8,15 @@ def test_str2bool(string, expected):
 
 def create_test_db():
     test_db_file = Path("database_test.db")
-    ft.connect_to_db(test_db_file)
-    ft.generate_empty_db(ask_for_confirmation=False)
+    ft.connect_to_db(test_db_file, interactive=False)
+    ft.generate_empty_db(interactive=False)
     example_teams = ["Team A", "Team B", "Team C", "Team D"]
     for team in example_teams:
         ft.new_team(team)
 
 def load_test_db():
     test_db_file = Path("../database_test.db")
-    ft.connect_to_db(test_db_file)
+    ft.connect_to_db(test_db_file, interactive=False)
 
 def test_get_teams():
     create_test_db()

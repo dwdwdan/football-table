@@ -63,7 +63,7 @@ def main():
 
     conn.close()
 
-def connect_to_db(db_file):
+def connect_to_db(db_file, interactive=True):
     """Connect to the database stored in db_file. If the file does not exist, create it, and populate it with an empty database."""
     create_tables = False
     if not db_file.is_file():
@@ -79,14 +79,14 @@ def connect_to_db(db_file):
     logging.info(f"Connected to database stored at {db_file}")
 
     if create_tables:
-        generate_empty_db()
+        generate_empty_db(interactive = interactive)
 
-def generate_empty_db(ask_for_confirmation=True):
+def generate_empty_db(interactive=True):
     """Creates required tables. WARNING: THIS WILL DELETE ALL DATA"""
     # We want to check with the user that this is what they want us to
     # do, as it is a destructive action, that can be run automatically
     # on startup
-    if ask_for_confirmation is True:
+    if interactive is True:
         confirmation = input(f"Do you want to generate a new empty database?\n THIS WILL DELETE ALL DATA (enter Y to confirm)")
         if str2bool(confirmation) is False:
                     return
